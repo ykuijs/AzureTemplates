@@ -541,12 +541,6 @@
             },
             "subnetResourceId": {
               "value": "[variables('staticSubnetID')]"
-            },
-            "rdpNATRuleID": {
-              "value": "[variables('spRDPNATRuleID')]"
-            },
-            "lbBEPool": {
-              "value": "[variables('sppublicBEAddressPoolID')]"
             }
           }
         }
