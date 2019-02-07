@@ -150,7 +150,7 @@
     "spcontentDatabaseName": "spFarm_Content",
     "spSiteTemplateName": "STS#0",
     "sharepointFarmName": "spFarm",
-    "spFQDN": "[concat(variables('spVmName'),'.',parameters('domainName'))]",
+    "spFQDN": "[concat(variables('spfeVmName'),'.',parameters('domainName'))]",
     "subnets": [
       {
         "name": "[variables('staticSubnetName')]",
