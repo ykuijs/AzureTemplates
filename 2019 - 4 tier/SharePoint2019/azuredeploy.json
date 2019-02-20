@@ -729,7 +729,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[variables('deploySqlStandaloneID')]",
         "[variables('spfeVmDeploymentID')]"
       ],
       "properties": {
@@ -813,7 +812,6 @@
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2015-01-01",
         "dependsOn": [
-          "[variables('deploySqlStandaloneID')]",
           "[variables('spbeVmDeploymentID')]"
         ],
         "properties": {
@@ -893,12 +891,11 @@
         }
       },
       {
-        "name": "[variables('deploySPSRCHStandalone')]",
+        "name": "[variables('deployCAMStandalone')]",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2015-01-01",
         "dependsOn": [
-          "[variables('deploySqlStandaloneID')]",
-          "[variables('spsrchVmDeploymentID')]"
+          "[variables('camVmDeploymentID')]"
         ],
         "properties": {
           "mode": "Incremental",
@@ -908,7 +905,256 @@
           },
           "parameters": {
             "spVMName": {
-              "value": "[variables('spsrchVmName')]"
+              "value": "[variables('camVmName')]"
+            },
+            "domainName": {
+              "value": "[parameters('domainName')]"
+            },
+            "adminUserName": {
+              "value": "[parameters('adminUsername')]"
+            },
+            "sharePointSetupUserAccountUserName": {
+              "value": "[variables('spSetupAccountName')]"
+            },
+            "sharePointFarmAccountUserName": {
+              "value": "[variables('spFarmAccountName')]"
+            },
+            "configDatabaseName": {
+              "value": "[variables('spconfigDatabaseName')]"
+            },
+            "administrationContentDatabaseName": {
+              "value": "[variables('spadministrationContentDatabaseName')]"
+            },
+            "sqlVMName": {
+              "value": "[variables('sqlClusterVmName')]"
+            },
+            "fqdn": {
+              "value": "[variables('spFQDN')]"
+            },
+            "contentDatabaseName": {
+              "value": "[variables('spcontentDatabaseName')]"
+            },
+            "spSiteTemplateName": {
+              "value": "[variables('spSiteTemplateName')]"
+            },
+            "adminPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointSetupUserAccountPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointFarmAccountPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointFarmPassphrasePassword": {
+              "value": "[variables('sharePointFarmPassphrasePassword')]"
+            },
+            "sharepointFarmName": {
+              "value": "[variables('sharepointFarmName')]"
+            },
+            "sharepointInstallSourceDrive": {
+              "value": "[variables('spSourceDrive')]"
+            },
+            "sharepointInstallSourceFolder": {
+              "value": "[variables('spSourceFolder')]"
+            },
+            "ProductKey": {
+              "value": "[parameters('sharepoint2016ProductKey')]"
+            },
+            "assetLocation": {
+              "value": "[variables('spassetLocation')]"
+            },
+            "sharepoint2016SourceDLLink": {
+              "value": "[parameters('sharepoint2016DownloadLink')]"
+            },
+            "primaryAdIpAddress": {
+              "value": "[variables('primaryAdIpAddress')]"
+            }
+          }
+        }
+      },
+      {
+        "name": "[variables('deploySPSRCHFEStandalone')]",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "[variables('spsrchfeVmDeploymentID')]"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('deploySPStandaloneTemplateURL')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "spVMName": {
+              "value": "[variables('spsrchfeVmName')]"
+            },
+            "domainName": {
+              "value": "[parameters('domainName')]"
+            },
+            "adminUserName": {
+              "value": "[parameters('adminUsername')]"
+            },
+            "sharePointSetupUserAccountUserName": {
+              "value": "[variables('spSetupAccountName')]"
+            },
+            "sharePointFarmAccountUserName": {
+              "value": "[variables('spFarmAccountName')]"
+            },
+            "configDatabaseName": {
+              "value": "[variables('spconfigDatabaseName')]"
+            },
+            "administrationContentDatabaseName": {
+              "value": "[variables('spadministrationContentDatabaseName')]"
+            },
+            "sqlVMName": {
+              "value": "[variables('sqlClusterVmName')]"
+            },
+            "fqdn": {
+              "value": "[variables('spFQDN')]"
+            },
+            "contentDatabaseName": {
+              "value": "[variables('spcontentDatabaseName')]"
+            },
+            "spSiteTemplateName": {
+              "value": "[variables('spSiteTemplateName')]"
+            },
+            "adminPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointSetupUserAccountPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointFarmAccountPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointFarmPassphrasePassword": {
+              "value": "[variables('sharePointFarmPassphrasePassword')]"
+            },
+            "sharepointFarmName": {
+              "value": "[variables('sharepointFarmName')]"
+            },
+            "sharepointInstallSourceDrive": {
+              "value": "[variables('spSourceDrive')]"
+            },
+            "sharepointInstallSourceFolder": {
+              "value": "[variables('spSourceFolder')]"
+            },
+            "ProductKey": {
+              "value": "[parameters('sharepoint2016ProductKey')]"
+            },
+            "assetLocation": {
+              "value": "[variables('spassetLocation')]"
+            },
+            "sharepoint2016SourceDLLink": {
+              "value": "[parameters('sharepoint2016DownloadLink')]"
+            },
+            "primaryAdIpAddress": {
+              "value": "[variables('primaryAdIpAddress')]"
+            }
+          }
+        }
+      },
+      {
+        "name": "[variables('deploySPSRCHBEStandalone')]",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "[variables('spsrchbeVmDeploymentID')]"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('deploySPStandaloneTemplateURL')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "spVMName": {
+              "value": "[variables('spsrchbeVmName')]"
+            },
+            "domainName": {
+              "value": "[parameters('domainName')]"
+            },
+            "adminUserName": {
+              "value": "[parameters('adminUsername')]"
+            },
+            "sharePointSetupUserAccountUserName": {
+              "value": "[variables('spSetupAccountName')]"
+            },
+            "sharePointFarmAccountUserName": {
+              "value": "[variables('spFarmAccountName')]"
+            },
+            "configDatabaseName": {
+              "value": "[variables('spconfigDatabaseName')]"
+            },
+            "administrationContentDatabaseName": {
+              "value": "[variables('spadministrationContentDatabaseName')]"
+            },
+            "sqlVMName": {
+              "value": "[variables('sqlClusterVmName')]"
+            },
+            "fqdn": {
+              "value": "[variables('spFQDN')]"
+            },
+            "contentDatabaseName": {
+              "value": "[variables('spcontentDatabaseName')]"
+            },
+            "spSiteTemplateName": {
+              "value": "[variables('spSiteTemplateName')]"
+            },
+            "adminPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointSetupUserAccountPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointFarmAccountPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "sharePointFarmPassphrasePassword": {
+              "value": "[variables('sharePointFarmPassphrasePassword')]"
+            },
+            "sharepointFarmName": {
+              "value": "[variables('sharepointFarmName')]"
+            },
+            "sharepointInstallSourceDrive": {
+              "value": "[variables('spSourceDrive')]"
+            },
+            "sharepointInstallSourceFolder": {
+              "value": "[variables('spSourceFolder')]"
+            },
+            "ProductKey": {
+              "value": "[parameters('sharepoint2016ProductKey')]"
+            },
+            "assetLocation": {
+              "value": "[variables('spassetLocation')]"
+            },
+            "sharepoint2016SourceDLLink": {
+              "value": "[parameters('sharepoint2016DownloadLink')]"
+            },
+            "primaryAdIpAddress": {
+              "value": "[variables('primaryAdIpAddress')]"
+            }
+          }
+        }
+      },
+      {
+        "name": "[variables('deployOOS1Standalone')]",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "[variables('oos1VmDeploymentID')]"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('deploySPStandaloneTemplateURL')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "spVMName": {
+              "value": "[variables('oos1VmName')]"
             },
             "domainName": {
               "value": "[parameters('domainName')]"
