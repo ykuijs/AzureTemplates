@@ -42,7 +42,7 @@
             "metadata": {
                 "description": "Direct download link for the SharePoint 2019 trial ISO. For example: http://download.msdn.microsoft.com/pr/en_sharepoint_server_2016_x64_dvd_3823428.iso?t=XXXXXXXXXXXXXXX"
             },
-            "defaultValue": "https://download.microsoft.com/download/0/0/4/004EE264-7043-45BF-99E3-3F74ECAE13E5/officeserver.img"
+            "defaultValue": "https://download.microsoft.com/download/C/B/A/CBA01793-1C8A-4671-BE0D-38C9E5BBD0E9/officeserver.img"
         },
         "sharepoint2016ProductKey": {
             "type": "string",
@@ -106,10 +106,25 @@
     "spbeVmName": "[concat('SPBE',resourceGroup().name)]",
     "deploySPBEStandalone": "SPBE",
 
-    "spsrchVmDeployment": "CreateSPSRCH",
-    "spsrchVmDeploymentID": "[concat('Microsoft.Resources/deployments/', variables('spsrchVmDeployment'))]",
-    "spsrchVmName": "[concat('SPSRCH',resourceGroup().name)]",
-    "deploySPSRCHStandalone": "SPSRCH",
+    "spsrchfeVmDeployment": "CreateSPSRCHFE",
+    "spsrchfeVmDeploymentID": "[concat('Microsoft.Resources/deployments/', variables('spsrchfeVmDeployment'))]",
+    "spsrchfeVmName": "[concat('SPSRCHFE',resourceGroup().name)]",
+    "deploySPSRCHFEStandalone": "SPSRCHFE",
+
+    "spsrchbeVmDeployment": "CreateSPSRCHBE",
+    "spsrchbeVmDeploymentID": "[concat('Microsoft.Resources/deployments/', variables('spsrchbeVmDeployment'))]",
+    "spsrchbeVmName": "[concat('SPSRCHBE',resourceGroup().name)]",
+    "deploySPSRCHBEStandalone": "SPSRCHBE",
+
+    "camVmDeployment": "CreateCAM",
+    "camVmDeploymentID": "[concat('Microsoft.Resources/deployments/', variables('camVmDeployment'))]",
+    "camVmName": "[concat('CAM',resourceGroup().name)]",
+    "deployCAMStandalone": "CAM",
+
+    "oos1VmDeployment": "CreateOOS1",
+    "oos1VmDeploymentID": "[concat('Microsoft.Resources/deployments/', variables('oos1VmDeployment'))]",
+    "oos1VmName": "[concat('OOS1',resourceGroup().name)]",
+    "deployOOS1Standalone": "OOS1",
 
     "sqlNicName": "[concat('SPSQLNIC',resourceGroup().name)]",
     "deploySqlStandalone": "DeploySqlStandalone",
@@ -140,7 +155,10 @@
     "spAdminRule": "SPAdminLBRule",
     "spferdpNAT": "SPFERDPNAT1",
     "spberdpNAT": "SPBERDPNAT1",
-    "spsrchrdpNAT": "SPSRCHRDPNAT1",
+    "spsrchferdpNAT": "SPSRCHFERDPNAT1",
+    "spsrchberdpNAT": "SPSRCHBERDPNAT1",
+    "camrdpNAT": "CAMRDPNAT1",
+    "oos1rdpNAT": "OOS1RDPNAT1",
     "spPublicLBID": "[resourceId('Microsoft.Network/loadBalancers',variables('sppublicLBName'))]",
     "spPubliclbFEConfigID": "[concat(variables('sppubliclbID'),'/frontendIPConfigurations/',variables('splbFE'))]",
     "spSiteProbeID": "[concat(variables('sppubliclbID'),'/probes/',variables('spSiteProbe'))]",
@@ -149,7 +167,10 @@
     "sppublicBEAddressPoolID": "[concat(variables('sppubliclbID'),'/backendAddressPools/',variables('splbBE'))]",
     "spfeRDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('spferdpNAT'))]",
     "spbeRDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('spberdpNAT'))]",
-    "spsrcRDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('spsrchrdpNAT'))]",
+    "spsrchfeRDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('spsrchferdpNAT'))]",
+    "spsrchbeRDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('spsrchberdpNAT'))]",
+    "camRDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('camrdpNAT'))]",
+    "oos1RDPNATRuleID": "[concat(variables('sppubliclbID'),'/inboundNatRules/',variables('oos1rdpNAT'))]",
     "spSourceDrive": "C:",
     "spSourceFolder": "SharePoint2019",
     "spconfigDatabaseName": "SP_Config",
@@ -508,7 +529,7 @@
         }
     },
     {
-        "name": "[variables('spsrchVmDeployment')]",
+        "name": "[variables('spsrchfeVmDeployment')]",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2015-01-01",
         "dependsOn": [
@@ -522,7 +543,7 @@
           },
           "parameters": {
             "vmName": {
-              "value": "[variables('spsrchVmName')]"
+              "value": "[variables('spsrchfeVmName')]"
             },
             "storageAccount": {
               "value": "[variables('spStorageName')]"
@@ -544,6 +565,120 @@
             }
           }
         }
+    },
+    {
+        "name": "[variables('spsrchbeVmDeployment')]",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "[variables('updateVNetDNS1Id')]"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('spTemplateURL')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vmName": {
+              "value": "[variables('spsrchbeVmName')]"
+            },
+            "storageAccount": {
+              "value": "[variables('spStorageName')]"
+            },
+            "storageAccountType": {
+              "value": "[variables('storageAccountType')]"
+            },
+            "adminUsername": {
+              "value": "[parameters('adminUsername')]"
+            },
+            "adminPassword": {
+              "value": "[parameters('adminPassword')]"
+            },
+            "vmSize": {
+              "value": "[variables('spVMSize')]"
+            },
+            "subnetResourceId": {
+              "value": "[variables('staticSubnetID')]"
+            }
+          }
+        }
+    },
+    {
+      "name": "[variables('camVmDeployment')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('updateVNetDNS1Id')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('spTemplateURL')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "[variables('camVmName')]"
+          },
+          "storageAccount": {
+            "value": "[variables('spStorageName')]"
+          },
+          "storageAccountType": {
+            "value": "[variables('storageAccountType')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "vmSize": {
+            "value": "[variables('spVMSize')]"
+          },
+          "subnetResourceId": {
+            "value": "[variables('staticSubnetID')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('oos1VmDeployment')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('updateVNetDNS1Id')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('spTemplateURL')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "[variables('oos1VmName')]"
+          },
+          "storageAccount": {
+            "value": "[variables('spStorageName')]"
+          },
+          "storageAccountType": {
+            "value": "[variables('storageAccountType')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "vmSize": {
+            "value": "[variables('spVMSize')]"
+          },
+          "subnetResourceId": {
+            "value": "[variables('staticSubnetID')]"
+          }
+        }
+      }
     },
     {
       "name": "[variables('deploySqlStandalone')]",
